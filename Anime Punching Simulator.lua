@@ -2,7 +2,8 @@ _G.AutoTapToggle = false
 _G.AutoEquiptBestToggle = false
 _G.AutoRebirthToggle = false
 _G.AutoUpgradeToggle = false
-_G.NotifcationsOfftoggle = false
+_G.AutoOpenEggsToggle = false
+_G.AutoOpen3EggsToggle = false
 
 function AutoTap()
     spawn(function()
@@ -44,45 +45,99 @@ function AutoUpgrade(upgrade)
     end)
 end
 
+
+function AutoBuyEgg1()
+    spawn(function()
+        while wait() do
+            keypress(0x45)
+            wait(0.5)
+            firesignal(game:GetService("Players").LocalPlayer.PlayerGui.Ui.CenterFrame.BuyEgg.Frame.Buy1.Button.MouseButton1Click)
+        end
+    end)
+end
+    
+    
+function AutoBuyEgg3()
+    spawn(function()
+        while wait() do
+            keypress(0x45)
+            wait(0.5)
+            firesignal(game:GetService("Players").LocalPlayer.PlayerGui.Ui.CenterFrame.BuyEgg.Frame.Buy3.Button.MouseButton1Click)
+        end
+    end)
+end
+
+function getCurrentPlayerPOS()
+    local plyr = game.Players.LocalPlayer
+    if plyr.Character then
+        return plyr.Character.HumanoidRootPart.Position
+    end
+    return false
+end
+
+function teleportTO(placeCFrame)
+    local plyr = game.Players.LocalPlayer
+    if plyr.Character then
+        plyr.Character.HumanoidRootPart.CFrame = placeCFrame
+    end
+end
+
+function teleportEgg(egg)
+    if game:GetService("Workspace")["__SETTINGS"]["__EGG"]:FindFirstChild(egg) then
+        teleportTO(game:GetService("Workspace")["__SETTINGS"]["__EGG"][egg].EGG.CFrame)
+    end
+end
+
 local library = loadstring(game:HttpGet(('https://raw.githubusercontent.com/AikaV3rm/UiLib/master/Lib.lua')))()
 
 local a = library:CreateWindow("Main") -- Creates the window
 
-local b = library:CreateWindow("Auto Upgrades") -- Creates the window
+local b = library:CreateWindow("Auto Buy Eggs") -- Creates the window
 
-local c = library:CreateWindow("Auto Rebirth") -- Creates the window
+local c = library:CreateWindow("Auto Upgrades") -- Creates the window
 
-local d = library:CreateWindow("Other") -- Creates the window
+local d = library:CreateWindow("Auto Rebirth") -- Creates the window
 
-local e = a:CreateFolder("Main") -- Creates the window
+local e = library:CreateWindow("Other") -- Creates the window
 
-local f = b:CreateFolder("Auto Upgrades") -- Creates the window
+local f = a:CreateFolder("Main") -- Creates the window
 
-local g = c:CreateFolder("Auto Rebirth") -- Creates the window
+local g = b:CreateFolder("Eggs") -- Creates the window
 
-local h = d:CreateFolder("Other") -- Creates the window
+local h = c:CreateFolder("Auto Upgrades") -- Creates the window
+
+local i = d:CreateFolder("Auto Rebirth") -- Creates the window
+
+local j = e:CreateFolder("Other") -- Creates the window
 
 
-h:Label("Right CTRL to close gui",{
+j:Label("Right CTRL to open/close gui",{
     TextSize = 20; -- Self Explaining
     TextColor = Color3.fromRGB(255,255,255); -- Self Explaining
     BgColor = Color3.fromRGB(32,28,28); -- Self Explaining
     
 }) 
 
-e:Toggle("Auto Click",function(bool)
+f:Toggle("Auto Click",function(bool)
     _G.AutoTapToggle = bool
     if bool then
         AutoTap()
     end
 end)
 
-e:Toggle("Auto Best hero",function(bool)
+f:Toggle("Auto Best hero",function(bool)
     _G.AutoEquiptBestToggle = bool
     if bool then
         AutoEquiptBest()
     end
 end)
+
+f:Label("Equipts best hero every 15 sec",{
+    TextSize = 15; -- Self Explaining
+    TextColor = Color3.fromRGB(255,255,255); -- Self Explaining
+    BgColor = Color3.fromRGB(32,28,28); -- Self Explaining
+    
+}) 
 
 
 local maxRebirths = 37;
@@ -92,11 +147,11 @@ for i = 1,maxRebirths, 1 do
  end
 
 local selectedRebirth
-g:Dropdown("Rebirth Level",rebirthTable,true,function(value) --true/false, replaces the current title "Dropdown" with the option that t
+i:Dropdown("Rebirth Level",rebirthTable,true,function(value) --true/false, replaces the current title "Dropdown" with the option that t
     selectedRebirth = value
 end)
 
-g:Toggle("Auto Rebirth",function(bool)
+i:Toggle("Auto Rebirth",function(bool)
     _G.AutoRebirthToggle = bool
     if bool and selectedRebirth then
         AutoRebirth(selectedRebirth)
@@ -110,17 +165,64 @@ for i = 1,bestUpgrade, 1 do
 end
 
 local selectedLevel
-f:Dropdown("Upgrade Level",selectedUpgradeTable,true,function(value2) --true/false, replaces the current title "Dropdown" with the option that t
+h:Dropdown("Upgrade Level",selectedUpgradeTable,true,function(value2) --true/false, replaces the current title "Dropdown" with the option that t
     selectedLevel = value2
 end)
 
-f:Toggle("Auto Upgrade",function(bool)
+h:Toggle("Auto Upgrade",function(bool)
     _G.AutoUpgradeToggle = bool
     if bool and selectedLevel then
         AutoUpgrade(selectedLevel)
     end
 end)
 
+local eggs = {}
+for i,v in pairs(game:GetService("Workspace")["__SETTINGS"]["__EGG"]:GetDescendants()) do
+    if v.Name == "EGG" and v.Parent then
+        table.insert(eggs,v.Parent)
+    end
+end
 
+local selectedEgg
+g:Dropdown("Egg",eggs,true,function(value3) --true/false, replaces the current title "Dropdown" with the option that t
+    selectedEgg = value3
+end)
 
-h:DestroyGui()
+g:Toggle("Auto Egg",function(bool)
+    _G.AutoOpenEggsToggle = bool
+    if bool and selectedEgg then
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(game:GetService("Workspace")["__SETTINGS"]["__EGG"][selectedEgg].EGG.Position)
+    AutoBuyEgg1()
+    end
+end)
+
+g:Toggle("Auto 3 Eggs",function(bool)
+    _G.AutoOpen3EggsToggle = bool
+    if bool and selectedEgg then
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(game:GetService("Workspace")["__SETTINGS"]["__EGG"][selectedEgg].EGG.Position)
+    AutoBuyEgg3()
+    end
+end)
+
+g:Label("Must own world",{
+    TextSize = 20; -- Self Explaining
+    TextColor = Color3.fromRGB(255,255,255); -- Self Explaining
+    BgColor = Color3.fromRGB(32,28,28); -- Self Explaining
+    
+}) 
+
+g:Label("Must own gamepass",{
+    TextSize = 20; -- Self Explaining
+    TextColor = Color3.fromRGB(255,255,255); -- Self Explaining
+    BgColor = Color3.fromRGB(32,28,28); -- Self Explaining
+    
+}) 
+
+g:Label("Takes a min to open",{
+    TextSize = 20; -- Self Explaining
+    TextColor = Color3.fromRGB(255,255,255); -- Self Explaining
+    BgColor = Color3.fromRGB(32,28,28); -- Self Explaining
+    
+}) 
+
+j:DestroyGui()
