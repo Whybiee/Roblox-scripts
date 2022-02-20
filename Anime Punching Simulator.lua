@@ -4,6 +4,7 @@ _G.AutoRebirthToggle = false
 _G.AutoUpgradeToggle = false
 _G.AutoOpenEggsToggle = false
 _G.AutoOpen3EggsToggle = false
+_G.AutoTrainToggle = false
 
 function AutoTap()
     spawn(function()
@@ -49,9 +50,12 @@ end
 function AutoBuyEgg1()
     spawn(function()
         while wait() do
-            keypress(0x45)
-            wait(0.5)
-            firesignal(game:GetService("Players").LocalPlayer.PlayerGui.Ui.CenterFrame.BuyEgg.Frame.Buy1.Button.MouseButton1Click)
+            if _G.AutoOpenEggsToggle == true then do
+                keypress(0x45)
+                wait(0.5)
+                firesignal(game:GetService("Players").LocalPlayer.PlayerGui.Ui.CenterFrame.BuyEgg.Frame.Buy1.Button.MouseButton1Click)
+                end
+            end
         end
     end)
 end
@@ -60,9 +64,12 @@ end
 function AutoBuyEgg3()
     spawn(function()
         while wait() do
+                if _G.AutoOpen3EggsToggle == true then do
             keypress(0x45)
             wait(0.5)
             firesignal(game:GetService("Players").LocalPlayer.PlayerGui.Ui.CenterFrame.BuyEgg.Frame.Buy3.Button.MouseButton1Click)
+                end
+            end
         end
     end)
 end
@@ -86,6 +93,18 @@ function teleportEgg(egg)
     if game:GetService("Workspace")["__SETTINGS"]["__EGG"]:FindFirstChild(egg) then
         teleportTO(game:GetService("Workspace")["__SETTINGS"]["__EGG"][egg].EGG.CFrame)
     end
+end
+
+function train()
+    spawn(function()
+        while wait() do
+            if _G.AutoTrainToggle == true then do
+            local VirtualInputManager=game:GetService("VirtualInputManager")
+            VirtualInputManager:SendKeyEvent(true,"E",false,game)
+                end
+            end
+        end
+    end)
 end
 
 local library = loadstring(game:HttpGet(('https://raw.githubusercontent.com/AikaV3rm/UiLib/master/Lib.lua')))()
@@ -164,15 +183,15 @@ for i = 1,bestUpgrade, 1 do
     table.insert(selectedUpgradeTable, tostring(i))
 end
 
-local selectedLevel
+local SelectedUpgrade
 h:Dropdown("Upgrade Level",selectedUpgradeTable,true,function(value2) --true/false, replaces the current title "Dropdown" with the option that t
-    selectedLevel = value2
+    SelectedUpgrade = value2
 end)
 
 h:Toggle("Auto Upgrade",function(bool)
     _G.AutoUpgradeToggle = bool
-    if bool and selectedLevel then
-        AutoUpgrade(selectedLevel)
+    if bool and SelectedUpgrade then
+        AutoUpgrade(SelectedUpgrade)
     end
 end)
 
@@ -184,7 +203,7 @@ for i,v in pairs(game:GetService("Workspace")["__SETTINGS"]["__EGG"]:GetDescenda
 end
 
 local selectedEgg
-g:Dropdown("Egg",eggs,true,function(value3) --true/false, replaces the current title "Dropdown" with the option that t
+g:Dropdown("Egg",eggs,true,function(value3)
     selectedEgg = value3
 end)
 
@@ -220,6 +239,20 @@ g:Label("Must own gamepass",{
 
 g:Label("Takes a min to open",{
     TextSize = 20; -- Self Explaining
+    TextColor = Color3.fromRGB(255,255,255); -- Self Explaining
+    BgColor = Color3.fromRGB(32,28,28); -- Self Explaining
+    
+}) 
+
+f:Toggle("Auto Train",function(bool)
+    _G.AutoTrainToggle = bool
+    if bool then
+        train()
+    end
+end)
+
+f:Label("Go to the place you want to train first",{
+    TextSize = 15; -- Self Explaining
     TextColor = Color3.fromRGB(255,255,255); -- Self Explaining
     BgColor = Color3.fromRGB(32,28,28); -- Self Explaining
     
