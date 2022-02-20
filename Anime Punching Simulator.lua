@@ -251,7 +251,7 @@ f:Toggle("Auto Train",function(bool)
     end
 end)
 
-f:Label("Go to the place you want to train first",{
+f:Label("Go to the place you want to practice first",{
     TextSize = 15; -- Self Explaining
     TextColor = Color3.fromRGB(255,255,255); -- Self Explaining
     BgColor = Color3.fromRGB(32,28,28); -- Self Explaining
