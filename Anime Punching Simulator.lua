@@ -5,6 +5,7 @@ _G.AutoUpgradeToggle = false
 _G.AutoOpenEggsToggle = false
 _G.AutoOpen3EggsToggle = false
 _G.AutoTrainToggle = false
+_G.TeleportToNewWorldToggle = false
 
 function AutoTap()
     spawn(function()
@@ -106,6 +107,13 @@ function train()
         end
     end)
 end
+
+function NewWorldTeleport()
+    game:GetService("TeleportService"):Teleport(8649665676);
+end
+
+
+
 
 local library = loadstring(game:HttpGet(('https://raw.githubusercontent.com/AikaV3rm/UiLib/master/Lib.lua')))()
 
@@ -257,5 +265,9 @@ f:Label("Go to the place you want to practice first",{
     BgColor = Color3.fromRGB(32,28,28); -- Self Explaining
     
 }) 
+
+j:Button("Teleport To New World",function()
+    NewWorldTeleport()
+end)
 
 j:DestroyGui()
