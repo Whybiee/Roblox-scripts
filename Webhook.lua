@@ -1,5 +1,6 @@
 local Webhook = "https://discord.com/api/webhooks/1005441542955216956/jlQl5bO820OBJztMtoOOju4qTc9VImmzILd3ma2BpN4OLRqu93p2vEPgPrC6EeI5qMfX" -- your webhook
 
+loadstring(game:HttpGet('https://raw.githubusercontent.com/Whybiee/Roblox-scripts/main/AltDetection.lua'))()
 local executor = identifyexecutor() or "Unknown"
 local Thing = game:HttpGet(string.format("https://thumbnails.roblox.com/v1/users/avatar?userIds=%d&size=180x180&format=Png&isCircular=true", game.Players.LocalPlayer.UserId))
 Thing = game:GetService("HttpService"):JSONDecode(Thing).data[1]
@@ -34,6 +35,11 @@ local msg = {
                 {
                     ["name"] = "Executor Used",
                     ["value"] = executor,
+                    ["inline"] = true
+                },
+                {
+                    ["name"] = "An Alt?",
+                    ["value"] = alt,
                     ["inline"] = true
                 },
             },
